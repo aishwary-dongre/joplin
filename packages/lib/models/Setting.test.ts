@@ -553,6 +553,20 @@ describe('models/Setting', () => {
 		expect(Setting.value('revisionService.ttlDays')).toBe(1);
 	});
 
+	test.each([
+		'sync.9.path',
+		'sync.11.path',
+	])('should trim whitespace around the Joplin Server URL (%s)', async (key) => {
+		Setting.setValue(key, ' https://example.com/ ');
+		expect(Setting.value(key)).toBe('https://example.com/');
+
+		// A value saved with whitespace before this fix is cleaned up on load
+		await writeFile(Setting.settingFilePath, JSON.stringify({ [key]: '  https://example.com' }), 'utf8');
+		await Setting.reset();
+		await Setting.load();
+		expect(Setting.value(key)).toBe('https://example.com');
+	});
+
 	test('should not fail to save settings that can conflict with uninstalled plugin settings', async () => {
 		Setting.setValue('editor.imageRendering', true);
 		expect(Setting.value('editor.imageRendering')).toBe(true);

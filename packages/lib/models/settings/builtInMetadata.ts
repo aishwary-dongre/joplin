@@ -360,6 +360,9 @@ const builtInMetadata = (Setting: typeof SettingType) => {
 			show: settings => {
 				return settings['sync.target'] === SyncTargetRegistry.nameToId('joplinServer');
 			},
+			filter: value => {
+				return value ? value.trim() : '';
+			},
 			public: true,
 			label: () => _('Joplin Server URL'),
 			description: () => emptyDirWarning,
@@ -399,6 +402,9 @@ const builtInMetadata = (Setting: typeof SettingType) => {
 			section: 'sync',
 			show: settings => {
 				return settings['sync.target'] === SyncTargetRegistry.nameToId('joplinServerSaml');
+			},
+			filter: value => {
+				return value ? value.trim() : '';
 			},
 			public: true,
 			label: () => _('Joplin Server URL'),
